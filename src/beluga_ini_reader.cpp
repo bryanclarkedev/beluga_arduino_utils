@@ -92,7 +92,7 @@ namespace beluga_utils
       int l = this_file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
       //TODO: Last line of file?
       std::string this_line = std::string(buffer[0], l); //Copy a fixed number of chars. If there are \0 within the string, problems!
-      beluga_utils::trim(this_line);
+      //beluga_utils::trim(this_line);
 
       int string_length = this_line.size();
       bool is_empty = string_length == 0;
@@ -143,10 +143,10 @@ namespace beluga_utils
       }
 
       std::string this_key = this_split_string[0];
-      beluga_utils::trim(this_key);
+      //beluga_utils::trim(this_key);
 
       std::string this_val = this_split_string[1];
-      beluga_utils::trim(this_val);
+      //beluga_utils::trim(this_val);
 
       _data[this_section_name][this_key] = this_val;
     }
