@@ -109,6 +109,11 @@ namespace beluga_utils
       {
         continue; //Ignore comments.
       }
+
+
+      Serial.println(this_line.c_str());
+      continue;
+
       bool is_section_heading = (first_char == '[') && (last_char == ']');
       if(is_section_heading)
       {
