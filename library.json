@@ -22,7 +22,7 @@
       {
         "owner": "bryanclarkedev",
         "name": "beluga_utils",
-        "version": "*"
+        "version": "https://github.com/bryanclarkedev/beluga_utils"
       }
     ]
 
