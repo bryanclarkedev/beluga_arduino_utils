@@ -49,11 +49,16 @@ namespace beluga_utils
             //bool parse_names_config(std::string config_file_section, std::string config_key, std::vector<std::string> & results_vec, std::string delim=",");
 
         protected:
-            std::string _config_file_path;
-            const size_t _line_buffer_len = 255;
-            bool _file_found = false;
-            bool _file_valid = false;
-            bool _initialised = false;
+          bool initialise_return_failure(std::string error_message, bool crash_on_fail);
+          std::string _config_file_path;
+          const size_t _line_buffer_len = 255;
+          bool _file_found = false;
+          bool _file_valid = false;
+          bool _initialised = false;
+          bool add_new_section_name(std::string this_name);
+
+          std::map< std::string, std::map< std::string, std::string > > _data; //A nested dictionary: { section1: {key1:val1, key2:val2}, section2: {key1: val1, key2: val2}, ... }
+          std::vector<std::string> _section_names;
     };
 }
 

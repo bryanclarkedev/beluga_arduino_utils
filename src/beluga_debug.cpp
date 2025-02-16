@@ -26,7 +26,7 @@ namespace beluga_utils
     Usage: beluga_utils::debug_print("This message will be printed if debug_print_enable is true");
     beluga_utils::debug_print("This message will always be printed", force_print = true);
     */
-    void debug_print(std::string s, bool add_newline  = true, bool force_print = false)
+    void debug_print(std::string s, bool add_newline , bool force_print)
     {
         if(! beluga_utils::debug_print_enable)
         {
