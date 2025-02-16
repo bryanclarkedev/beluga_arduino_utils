@@ -1,0 +1,3 @@
+[submodule "submodules/beluga_utils"]
+	path = submodules/beluga_utils
+	url = https://github.com/bryanclarkedev/beluga_utils
