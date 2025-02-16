@@ -29,7 +29,7 @@ namespace beluga_utils
     {
         if(! debug_print_enable)
         {
-            return false;
+            return;
         }
         if(add_newline)
         {
@@ -52,7 +52,8 @@ namespace beluga_utils
     {
         while(1)
         {
-            debug_print(s, force_print = true);
+            bool force_print = true;
+            debug_print(s, true );
             delay(period_s * beluga_utils::MS_TO_S); //delay is in ms so we convert s -> ms
         }
     }
