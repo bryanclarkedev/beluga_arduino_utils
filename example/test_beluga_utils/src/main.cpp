@@ -7,7 +7,7 @@
 std::string config_file_path = "/test.ini";
 
 std::stringstream ss;
-
+//#include "../../../src/beluga_debug.h"
 
 int iter = 0;
 
@@ -26,7 +26,7 @@ void loop() {
   //assert(b == false);
   ss.str("");
   ss << "Iteration " << iter << " time " << (int) (millis() / 1000) << "s";
-  Serial.println(ss.str().c_str());
+  beluga_utils::debug_print(ss.str().c_str());
   iter++;
   delay(1000);
 }

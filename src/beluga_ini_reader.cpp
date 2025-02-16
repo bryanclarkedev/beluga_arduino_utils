@@ -41,30 +41,30 @@ namespace beluga_utils
     {
       if(crash_on_fail)
       {
-        debug_print_loop_forever("beluga_ini_reader: SPIFFS.begin() failed");
+        beluga_utils::debug_print("beluga_ini_reader: SPIFFS.begin() failed");
       }else{
         return false;
       }
     }
 
     File this_file;
-    this_file = SPIFFS.open(this_filename.c_str(), "r");
-    while(file.available())
+    this_file = SPIFFS.open(this_filename, "r");
+    while(this_file.available())
     {
       char terminator_char = '\n';
-      int l = file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
+      int l = this_file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
       //TODO: Last line of file?
       
       bool is_section_heading = (buffer[0] == '[') && (buffer[l-1] == ']');
       if(is_section_heading)
       {
         std::string this_heading = std::string(buffer[1], l-2); //Copy a fixed number of chars. If there are \0 within the string, problems!
-        debug_print("Read config heading: ", true, false);
-        debug_print(this_heading);
+        beluga_utils::debug_print("Read config heading: ", true, false);
+        beluga_utils::debug_print(this_heading);
       }else{
         std::string this_line = std::string(buffer, l); //Copy a fixed number of chars. If there are \0 within the string, problems!
-        debug_print("Read config line: ", true, false);
-        debug_print(this_line);
+        beluga_utils::debug_print("Read config line: ", true, false);
+        beluga_utils::debug_print(this_line);
       }
     }
     
@@ -72,6 +72,7 @@ namespace beluga_utils
     return _initialised;
   }
 
+  #if 0
   /*!
   \brief Retrieves data a given section-key pair.
   @param section_name is the section in the .ini to use. In the .ini it is in [square braces]. In the beluga library it's
@@ -101,7 +102,7 @@ namespace beluga_utils
       if (!ini.open()) {
           while (1)
           {
-              Serial.println("Ini open failed");
+              beluga_utils::debug_print("Ini open failed");
               delay(1000);
           }
       }
@@ -124,14 +125,14 @@ namespace beluga_utils
         {
           std::stringstream ss;
           ss << "Config not found: section " << section_name << " key " << key_name;
-          Serial.println(ss.str().c_str());
+          beluga_utils::debug_print(ss.str().c_str());
         }
       }
       return val_found;
 
   }
 
-
+  
   /*
   config_key == "sensor_names", "actuator_names", etc
   */
@@ -155,6 +156,7 @@ namespace beluga_utils
       }
       return true;
   }
+  #endif
 
 
 }
