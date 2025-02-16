@@ -3,7 +3,8 @@
 
 #include <sstream>
 
-#include "../submodules/beluga_utils/src/beluga_string.h"
+#include "beluga_string.h"
+
 
 namespace beluga_utils
 {
