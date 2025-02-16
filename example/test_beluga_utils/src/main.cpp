@@ -21,7 +21,7 @@ void setup() {
     Serial.println(5-i);
     delay(1000);
   }    
-  this_ini.initialise();
+  //this_ini.initialise();
   //this_device.initialise(config_file_path, "demo_device");
 }
 
