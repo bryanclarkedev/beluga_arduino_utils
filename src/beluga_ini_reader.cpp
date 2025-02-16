@@ -28,7 +28,7 @@ namespace beluga_utils
   {
     //Check if this section name is already present
 
-      if(std::find(_section_names.begin(), _section_names.end(), _section_names) != _section_names.end()) {
+      if(std::find(_section_names.begin(), _section_names.end(), this_section_name) != _section_names.end()) {
           /* v contains x */
           return false;
       } else {
