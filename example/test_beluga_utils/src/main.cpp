@@ -4,10 +4,10 @@
 //beluga_core::device this_device;
 #include <sstream>
 
-#include "beluga_debug.h"
 std::string config_file_path = "/test.ini";
 
 std::stringstream ss;
+
 
 int iter = 0;
 

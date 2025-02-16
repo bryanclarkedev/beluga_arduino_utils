@@ -1,6 +1,8 @@
 #include "beluga_ini_reader.h"
 #include "beluga_debug.h"
-#include <sstream.h>
+#include <sstream>
+
+#include "submodules/beluga_utils/src/beluga_string.h"
 
 namespace beluga_utils
 {
