@@ -8,7 +8,10 @@ std::string config_file_path = "/test.ini";
 
 std::stringstream ss;
 //#include "../../../src/beluga_debug.h"
+#include "beluga_debug.h"
+#include "beluga_ini_reader.h"
 
+beluga_utils::ini_reader this_ini(config_file_path);
 int iter = 0;
 
 void setup() {
@@ -18,6 +21,7 @@ void setup() {
     Serial.println(5-i);
     delay(1000);
   }    
+  this_ini.initialise();
   //this_device.initialise(config_file_path, "demo_device");
 }
 

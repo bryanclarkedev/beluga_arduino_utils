@@ -44,7 +44,7 @@ namespace beluga_utils
     {
         public:
             ini_reader(std::string);
-            bool initialise(bool crash_on_fail);
+            bool initialise(bool crash_on_fail = true);
             //bool get_config_value(std::string section_name, std::string key_name, std::string * return_config_value, bool verbose = true);
             //bool parse_names_config(std::string config_file_section, std::string config_key, std::vector<std::string> & results_vec, std::string delim=",");
 
