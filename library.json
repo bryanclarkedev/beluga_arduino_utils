@@ -1,0 +1,25 @@
+{
+    "name": "beluga_arduino_utils",
+    "version": "0.0.1",
+    "description": "Some utility classes for Arduino ESP32 C++ with PlatformIO",
+    "keywords": "base, inherited",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/bryanclarkedev/beluga_arduino_utils"
+    },
+    "authors":
+    [
+      {
+        "name": "Bryan Clarke",
+        "email": "bryanclarkedev@gmail.com",
+        "url": "https://www.bryanclarke.dev/contact"
+      }
+    ],
+    "license": "MIT",
+    "homepage": "https://mit-license.org/",
+    "dependencies": {
+    },
+    "frameworks": "arduino",
+    "platforms": "espressif32"
+  }
