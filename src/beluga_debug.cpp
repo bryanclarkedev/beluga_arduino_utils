@@ -53,8 +53,9 @@ namespace beluga_utils
     {
         while(1)
         {
+            bool newlines = true;
             bool force_print = true;
-            beluga_utils::debug_print(s, true );
+            beluga_utils::debug_print(s, newlines, force_print );
             delay(period_s * beluga_utils::MS_TO_S); //delay is in ms so we convert s -> ms
         }
     }
