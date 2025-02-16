@@ -28,7 +28,7 @@ namespace beluga_utils
 
   @todo: Replace SPIFFS with LittleFS and have better failure handling e.g. file not found.
   */
-  bool ini_reader::initialise(bool crash_on_fail = false)
+  bool ini_reader::initialise(bool crash_on_fail = true)
   {
       
     //_line_buffer_len is the max length of any one line (not the whole file)
