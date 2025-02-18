@@ -107,6 +107,10 @@ namespace beluga_utils
         debug_print(this_heading);
       }else{
         std::string this_line = std::string(buffer, l); //Copy a fixed number of chars. If there are \0 within the string, problems!
+        if(this_line[0] == comment_char)
+        {
+          continue; //Ignore comment
+        }
         debug_print("Read config line: ", true, false);
         debug_print(this_line);
       }
