@@ -67,6 +67,49 @@ namespace beluga_utils
   */
   bool ini_reader::initialise(bool crash_on_fail )
   {
+
+    
+    //_line_buffer_len is the max length of any one line (not the whole file)
+    char buffer[_line_buffer_len];
+    const char *this_filename = _config_file_path.c_str(); 
+    
+    //Start SPIFFS
+    bool spiffs_ok = SPIFFS.begin();
+    if(!spiffs_ok)
+    {
+      if(crash_on_fail)
+      {
+        debug_print_loop_forever("beluga_ini_reader: SPIFFS.begin() failed");
+      }else{
+        return false;
+      }
+    }
+    File this_file;
+    this_file = SPIFFS.open(this_filename.c_str(), "r");
+    while(file.available())
+    {
+      char terminator_char = '\n';
+      int l = file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
+      //TODO: Last line of file?
+      
+      bool is_section_heading = (buffer[0] == '[') && (buffer[l-1] == ']');
+      if(is_section_heading)
+      {
+        std::string this_heading = std::string(buffer[1], l-2); //Copy a fixed number of chars. If there are \0 within the string, problems!
+        debug_print("Read config heading: ", true, false);
+        debug_print(this_heading);
+      }else{
+        std::string this_line = std::string(buffer, l); //Copy a fixed number of chars. If there are \0 within the string, problems!
+        debug_print("Read config line: ", true, false);
+        debug_print(this_line);
+      }
+    }
+    
+    _initialised = true;
+    return _initialised;
+
+    
+    #if 0
     //_line_buffer_len is the max length of any one line (not the whole file)
     char buffer[_line_buffer_len];
     const char *this_filename = _config_file_path.c_str(); 
@@ -159,6 +202,8 @@ namespace beluga_utils
       //beluga_utils::trim(this_val);
 
       _data[this_section_name][this_key] = this_val;
+
+      #endif
     }
 
     
