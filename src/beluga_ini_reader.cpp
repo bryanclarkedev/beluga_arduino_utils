@@ -254,6 +254,8 @@ namespace beluga_utils
     std::string this_delimiter = "=";
     std::vector<std::string> split_data = beluga_utils::split_string(this_data_str, this_delimiter);
     _data[this_section_name][split_data[0]] = split_data[1];
+
+    return true;
   }
 
   #if 0
