@@ -135,8 +135,15 @@ namespace beluga_utils
 
     for(auto iter1 = _data.begin(); iter1 != _data.end(); iter1++)
     {
-      Serial.print("SECTIONS: ");
+      Serial.print("SECTION: ");
       Serial.println(iter1->first.c_str());
+      for(auto iter2 = iter1->second.begin(); iter2 != iter1->second.end(); iter2++)
+      {
+        Serial.print("\t")
+        Serial.print(iter2->first.c_str());
+        Serial.print(" : ");
+        Serial.println(iter2->second.c_str());
+      }
     }
     
     _initialised = true;
