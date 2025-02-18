@@ -104,7 +104,7 @@ namespace beluga_utils
       bool is_section_heading = (buffer[0] == '[') && (buffer[l-1] == ']');
       if(is_section_heading)
       {
-        std::string this_heading = std::string(buffer, l); //std::string(buffer[1], l-2); //Copy a fixed number of chars. If there are \0 within the string, problems!
+        std::string this_heading = std::string(buffer[1], l-2); //std::string(buffer[1], l-2); //Copy a fixed number of chars. If there are \0 within the string, problems!
         debug_print("Read config heading: ", true, false);
         debug_print(this_heading);
         bool new_section_ok = add_new_section_name(this_heading);
