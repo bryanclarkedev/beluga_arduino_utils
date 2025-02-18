@@ -86,6 +86,8 @@ namespace beluga_utils
     }
     File this_file;
     this_file = SPIFFS.open(_config_file_path.c_str(), "r");
+    std::string this_section_name = "";
+
     while(this_file.available())
     {
       char terminator_char = '\n';
@@ -105,6 +107,17 @@ namespace beluga_utils
         std::string this_heading = std::string(buffer[1], l-2); //Copy a fixed number of chars. If there are \0 within the string, problems!
         debug_print("Read config heading: ", true, false);
         debug_print(this_heading);
+        bool new_section_ok = add_new_section_name(this_heading);
+        if(! new_section_ok)
+        {
+          std::stringstream ss;
+          ss << "Error adding config section " << this_heading << ": duplicate section name.";
+          return initialise_return_failure(ss.str(), crash_on_fail);
+        }
+
+        this_section_name = this_section;
+        continue; //Get the config
+
       }else{
         std::string this_line = std::string(buffer, l); //Copy a fixed number of chars. If there are \0 within the string, problems!
         if(this_line[0] == comment_char)
