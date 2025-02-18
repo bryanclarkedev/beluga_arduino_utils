@@ -203,7 +203,6 @@ namespace beluga_utils
 
       _data[this_section_name][this_key] = this_val;
 
-      #endif
     }
 
     
@@ -212,6 +211,8 @@ namespace beluga_utils
     //The file has been parsed successfully.
     _initialised = true;
     return _initialised;
+    #endif
+
   }
 
   #if 0
