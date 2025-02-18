@@ -115,7 +115,7 @@ namespace beluga_utils
           return initialise_return_failure(ss.str(), crash_on_fail);
         }
 
-        this_section_name = this_section;
+        this_section_name = this_heading;
         continue; //Get the config
 
       }else{
