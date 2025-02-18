@@ -92,9 +92,9 @@ namespace beluga_utils
       char comment_char = ';';
 
       int l = this_file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
-      if(l == 1)
+      if(l == 0)
       {
-        //Just a newline
+        //Just a newline (terminator isn't returned)
         continue;
       }
       //TODO: Last line of file?
