@@ -89,7 +89,14 @@ namespace beluga_utils
     while(this_file.available())
     {
       char terminator_char = '\n';
+      char comment_char = ';';
+
       int l = this_file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
+      if(l == 1)
+      {
+        //Just a newline
+        continue;
+      }
       //TODO: Last line of file?
       
       bool is_section_heading = (buffer[0] == '[') && (buffer[l-1] == ']');
