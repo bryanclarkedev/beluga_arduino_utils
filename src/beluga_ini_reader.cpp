@@ -129,7 +129,7 @@ namespace beluga_utils
         }
         debug_print("Read config line: ", true, false);
         debug_print(this_line);
-        add_new_config_data(this_section_name, this_line)
+        add_new_config_data(this_section_name, this_line);
       }
     }
 
