@@ -139,7 +139,7 @@ namespace beluga_utils
       Serial.println(iter1->first.c_str());
       for(auto iter2 = iter1->second.begin(); iter2 != iter1->second.end(); iter2++)
       {
-        Serial.print("\t")
+        Serial.print("\t");
         Serial.print(iter2->first.c_str());
         Serial.print(" : ");
         Serial.println(iter2->second.c_str());
