@@ -106,7 +106,7 @@ namespace beluga_utils
       {
         std::string this_heading = std::string(buffer, l); //std::string(buffer[1], l-2); //Copy a fixed number of chars. If there are \0 within the string, problems!
         //Remove [ and ]
-        this_heading = this_heading.substr(1, this_heading.size()-2)
+        this_heading = this_heading.substr(1, this_heading.size()-2);
         
         debug_print("Read config heading: ", true, false);
         debug_print(this_heading);
