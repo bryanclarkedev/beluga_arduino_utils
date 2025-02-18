@@ -56,7 +56,7 @@ namespace beluga_utils
           bool _file_valid = false;
           bool _initialised = false;
           bool add_new_section_name(std::string this_name);
-
+          bool add_new_config_data(std::string this_section_name, std::string this_data);
           std::map< std::string, std::map< std::string, std::string > > _data; //A nested dictionary: { section1: {key1:val1, key2:val2}, section2: {key1: val1, key2: val2}, ... }
           std::vector<std::string> _section_names;
     };

@@ -129,7 +129,14 @@ namespace beluga_utils
         }
         debug_print("Read config line: ", true, false);
         debug_print(this_line);
+        add_new_config_data(this_section_name, this_line)
       }
+    }
+
+    for(auto iter1 = _data.begin(); iter1 != _data.end(); iter1++)
+    {
+      Serial.print("SECTIONS: ");
+      Serial.println(iter1->first.c_str());
     }
     
     _initialised = true;
@@ -240,6 +247,13 @@ namespace beluga_utils
     return _initialised;
     #endif
 
+  }
+
+  bool ini_reader::add_new_config_data(std::string this_section_name, std::string this_data_str)
+  {
+    std::string this_delimiter = "=";
+    std::vector<std::string> split_data = beluga_utils::split_string(this_data_str, this_delimiter);
+    _data[this_section_name][split_data[0]] = split_data[1];
   }
 
   #if 0
