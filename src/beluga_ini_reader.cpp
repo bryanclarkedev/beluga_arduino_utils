@@ -86,10 +86,10 @@ namespace beluga_utils
     }
     File this_file;
     this_file = SPIFFS.open(_config_file_path.c_str(), "r");
-    while(file.available())
+    while(this_file.available())
     {
       char terminator_char = '\n';
-      int l = file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
+      int l = this_file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
       //TODO: Last line of file?
       
       bool is_section_heading = (buffer[0] == '[') && (buffer[l-1] == ']');
