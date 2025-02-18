@@ -85,7 +85,7 @@ namespace beluga_utils
       }
     }
     File this_file;
-    this_file = SPIFFS.open(this_filename.c_str(), "r");
+    this_file = SPIFFS.open(_config_file_path.c_str(), "r");
     while(file.available())
     {
       char terminator_char = '\n';
@@ -108,7 +108,7 @@ namespace beluga_utils
     _initialised = true;
     return _initialised;
 
-    
+
     #if 0
     //_line_buffer_len is the max length of any one line (not the whole file)
     char buffer[_line_buffer_len];
