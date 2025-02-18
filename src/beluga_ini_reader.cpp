@@ -94,6 +94,11 @@ namespace beluga_utils
       std::string this_line = std::string(buffer[0], l); //Copy a fixed number of chars. If there are \0 within the string, problems!
       //beluga_utils::trim(this_line);
 
+      Serial.print("GOT LINE: ");
+      Serial.println(this_line.c_str());
+      continue;
+
+      
       int string_length = this_line.size();
       bool is_empty = string_length == 0;
       if(is_empty)
@@ -155,6 +160,10 @@ namespace beluga_utils
 
       _data[this_section_name][this_key] = this_val;
     }
+
+    
+
+
     //The file has been parsed successfully.
     _initialised = true;
     return _initialised;

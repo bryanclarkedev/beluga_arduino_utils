@@ -9,8 +9,6 @@ std::string config_file_path = "/test.ini";
 std::stringstream ss;
 #include "beluga_debug.h"
 #include "beluga_ini_reader.h"
-//#include "../../../src/beluga_debug.h"
-//#include "../../../src/beluga_ini_reader.h"
 
 beluga_utils::ini_reader this_ini(config_file_path);
 
