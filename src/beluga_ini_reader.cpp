@@ -40,6 +40,9 @@ namespace beluga_utils
       }
   }
 
+  /*!
+  \brief Return this when initialisation fails.
+  */
   bool ini_reader::initialise_return_failure(std::string error_message, bool crash_on_fail)
   {
     if(crash_on_fail)
@@ -52,6 +55,29 @@ namespace beluga_utils
     return false;
 
   }
+    /*!
+    \brief Print the config dictionary to serial as a tree
+    \details Print config heading, and indented key:value pairs. Do nothing if not initialised.debug_print
+    \return Void.
+    */
+    void ini_reader::print_config_to_serial()
+    {
+      if(! _initialised)
+      {
+        return;
+      }
+      for(auto iter1 = _data.begin(); iter1 != _data.end(); iter1++)
+      {
+        Serial.println(iter1->first.c_str());
+        for(auto iter2 = iter1->second.begin(); iter2 != iter1->second.end(); iter2++)
+        {
+          Serial.print("\t");
+          Serial.print(iter2->first.c_str());
+          Serial.print(" : ");
+          Serial.println(iter2->second.c_str());
+        }
+      }
+    }
 
 
   /*!
@@ -61,8 +87,8 @@ namespace beluga_utils
   \return True if the file is found, and is valid .ini. False otherwise if debug_print_loop_forever is False, or hang of debug_print_loop_forever is True
   Usage:
   ini_reader ini("./config.ini");
-  bool ini_ok = ini.initialise();
-
+  bool crash_on_fail = true;
+  bool ini_ok = ini.initialise(crash_on_fail);
   @todo: Replace SPIFFS with LittleFS and have better failure handling e.g. file not found.
   */
   bool ini_reader::initialise(bool crash_on_fail )
@@ -132,127 +158,9 @@ namespace beluga_utils
         add_new_config_data(this_section_name, this_line);
       }
     }
-
-    for(auto iter1 = _data.begin(); iter1 != _data.end(); iter1++)
-    {
-      Serial.print("SECTION: ");
-      Serial.println(iter1->first.c_str());
-      for(auto iter2 = iter1->second.begin(); iter2 != iter1->second.end(); iter2++)
-      {
-        Serial.print("\t");
-        Serial.print(iter2->first.c_str());
-        Serial.print(" : ");
-        Serial.println(iter2->second.c_str());
-      }
-    }
     
     _initialised = true;
     return _initialised;
-
-
-    #if 0
-    //_line_buffer_len is the max length of any one line (not the whole file)
-    char buffer[_line_buffer_len];
-    const char *this_filename = _config_file_path.c_str(); 
-    
-    //Start SPIFFS
-    bool spiffs_ok = SPIFFS.begin();
-    if(!spiffs_ok)
-    {
-      std::string err_msg = "beluga_ini_reader:: SPIFFS.begin() failed.";
-      return initialise_return_failure(err_msg, crash_on_fail);
-    }
-
-    //Initialise config
-    std::string this_section_name = "";
-
-    File this_file;
-    this_file = SPIFFS.open(this_filename, "r");
-
-    while(this_file.available())
-    {
-      char terminator_char = '\n';
-      char comment_char = ';';
-      int l = this_file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
-      //TODO: Last line of file?
-      std::string this_line = std::string(buffer[0], l); //Copy a fixed number of chars. If there are \0 within the string, problems!
-      //beluga_utils::trim(this_line);
-
-      Serial.print("GOT LINE: ");
-      Serial.println(this_line.c_str());
-      continue;
-
-      
-      int string_length = this_line.size();
-      bool is_empty = string_length == 0;
-      if(is_empty)
-      {
-        continue;
-      }
-
-      int last_index = string_length-1;
-      char first_char = this_line[0];
-      char last_char = this_line[last_index];
-      bool is_comment = first_char == comment_char;
-      if(is_comment)
-      {
-        continue; //Ignore comments.
-      }
-
-
-      Serial.println(this_line.c_str());
-      continue;
-
-      bool is_section_heading = (first_char == '[') && (last_char == ']');
-      if(is_section_heading)
-      {
-        std::string this_section = this_line.substr(1, string_length-2); //Copy a fixed number of chars. If there are \0 within the string, problems!
-        beluga_utils::debug_print("Read config heading: ", true, false);
-        beluga_utils::debug_print(this_section);
-
-        bool new_section_ok = add_new_section_name(this_section);
-        if(! new_section_ok)
-        {
-          std::stringstream ss;
-          ss << "Error adding config section " << this_section << ": duplicate section name.";
-          return initialise_return_failure(ss.str(), crash_on_fail);
-        }
-
-        this_section_name = this_section;
-        continue; //Get the config
-      }
-      //Not a comment, not a section heading. Must be key-val.
-      beluga_utils::debug_print("Read config key-value line: ", true, false);
-      beluga_utils::debug_print(this_line);
-
-      std::string delimiter = "=";
-
-      std::vector<std::string> this_split_string = beluga_utils::split_string(this_line, delimiter);
-      bool key_val_ok = this_split_string.size() == 2; 
-      if(! key_val_ok)
-      {
-        std::stringstream ss;
-        ss << "Error reading config in section " << this_section_name << ": expected <key> = <value> but could not parse line: " << this_line;
-        return initialise_return_failure(ss.str(), crash_on_fail);
-      }
-
-      std::string this_key = this_split_string[0];
-      //beluga_utils::trim(this_key);
-
-      std::string this_val = this_split_string[1];
-      //beluga_utils::trim(this_val);
-
-      _data[this_section_name][this_key] = this_val;
-
-    }
-
-    
-
-
-    //The file has been parsed successfully.
-    _initialised = true;
-    return _initialised;
-    #endif
 
   }
 
@@ -265,7 +173,7 @@ namespace beluga_utils
     return true;
   }
 
-  #if 0
+
   /*!
   \brief Retrieves data a given section-key pair.
   @param section_name is the section in the .ini to use. In the .ini it is in [square braces]. In the beluga library it's
@@ -277,7 +185,8 @@ namespace beluga_utils
   \details This is the primary function used to retrieve data from the config file.
   Usage:
   ini_reader ini("./config.ini");
-  bool ini_ok = ini.initialise();
+  bool crash_on_fail = true;
+  bool ini_ok = ini.initialise(crash_on_fail);
   std::string section_name("section1");
   std::string key_str("key1");
   std::string return_str;
@@ -287,69 +196,31 @@ namespace beluga_utils
   */
   bool ini_reader::get_config_value(std::string section_name, std::string key_name, std::string * return_config_value, bool verbose)
   {
-      char buffer[_line_buffer_len];
-      const char *this_filename = _config_file_path.c_str(); //"/test.ini";
-
-      SPIFFSIniFile ini(this_filename);
-
-      if (!ini.open()) {
-          while (1)
-          {
-              beluga_utils::debug_print("Ini open failed");
-              delay(1000);
-          }
-      }
-    
-      //const char * c_section = section_name.c_str();
-      //const char * c_key = key_name.c_str();
-      bool val_found = ini.getValue(section_name.c_str(), key_name.c_str(), buffer, _line_buffer_len) ;
-      if(val_found)
+    try
+    {
+      std::string this_value = _data[section_name][key_name];
+      if(verbose)
       {
-          std::string config_val(buffer);
-          *return_config_value = config_val;
-          if(verbose)
-          {
-            std::stringstream ss;
-            ss << "section " << section_name << " has entry " << key_name <<" with value " << config_val;
-            Serial.println(ss.str().c_str());
-          }
-      }else{
-        if(verbose)
-        {
-          std::stringstream ss;
-          ss << "Config not found: section " << section_name << " key " << key_name;
-          beluga_utils::debug_print(ss.str().c_str());
-        }
+        std::stringstream ss;
+        ss << "ini_reader::get_config_value: section name " << section_name << " has value: " << this_value;
+        debug_print(ss.str());
       }
-      return val_found;
-
-  }
-
-  
-  /*
-  config_key == "sensor_names", "actuator_names", etc
-  */
-  bool ini_reader::parse_names_config(std::string config_file_section, std::string config_key, std::vector<std::string> & results_vec, std::string delim)
-  {
-      bool config_ok = false;
-      std::string name_list_str;
-      config_ok = get_config_value(config_file_section, config_key, &name_list_str );
-      if(! config_ok )
-      {
-          return false;
-      }
-      //name_list_str is now a comma-delimited list of names of things: apple,Pear,POTATO
-      //convert to lower-case
-      std::vector<std::string> raw_names = beluga_utils::split_string(name_list_str, delim);
-      //Convert to lowercase and store
-      for(auto iter = raw_names.begin(); iter != raw_names.end(); iter++)
-      {
-          std::string this_name =  string_to_lower(*iter);
-          results_vec.push_back(this_name);   
-      }
+      *return_config_value = this_value;
       return true;
+    }catch
+    {
+      //Section-key pair not present.
+    }
+    return false;
   }
-  #endif
+    
+  bool ini_reader::wipe_config()
+  {
+    _data.clear();
+  }
+  
+
+
 
 
 }

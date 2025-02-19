@@ -23,6 +23,21 @@ void setup() {
   }    
   this_ini.initialise();
   //this_device.initialise(config_file_path, "demo_device");
+
+  this_ini.print_config_to_serial();
+
+  std::string val;
+  bool ok = this_ini.get_config_value("demo_device", "placeholder", &val, false);
+  if(! ok)
+  {
+   beluga_utils::debug_print("error getting data");
+  }else{
+    std::stringstream ss;
+    ss << "Got val demo_device.placeholder = " << val;
+    beluga_utils::debug_print(ss.str());
+  }
+
+  
 }
 
 void loop() {
