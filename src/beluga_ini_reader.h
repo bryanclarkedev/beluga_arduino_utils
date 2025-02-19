@@ -48,7 +48,7 @@ namespace beluga_utils
             bool get_config_value(std::string section_name, std::string key_name, std::string * return_config_value, bool verbose = true);
             //bool parse_names_config(std::string config_file_section, std::string config_key, std::vector<std::string> & results_vec, std::string delim=",");
             void print_config_to_serial();
-            bool wipe_config();
+            void clear();
         protected:
           bool initialise_return_failure(std::string error_message, bool crash_on_fail);
           std::string _config_file_path;

@@ -37,7 +37,9 @@ void setup() {
     beluga_utils::debug_print(ss.str());
   }
 
-  
+  this_ini.clear();
+
+
 }
 
 void loop() {

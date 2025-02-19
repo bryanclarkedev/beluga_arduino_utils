@@ -214,7 +214,7 @@ namespace beluga_utils
     return false;
   }
     
-  bool ini_reader::wipe_config()
+  void ini_reader::clear()
   {
     _data.clear();
   }
