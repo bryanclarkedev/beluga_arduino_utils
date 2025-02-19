@@ -207,7 +207,7 @@ namespace beluga_utils
       }
       *return_config_value = this_value;
       return true;
-    }catch
+    }catch()
     {
       //Section-key pair not present.
     }
