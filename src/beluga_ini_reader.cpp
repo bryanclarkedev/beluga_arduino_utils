@@ -266,6 +266,19 @@ namespace beluga_utils
     {
       return false;
     }
+
+    bool config_key_present = _data[config_file_section].find(config_key) != _data[config_file_section].end();
+    if(!config_key_present)
+    {
+
+      std::stringstream ss;
+      ss << "ini_reader::get_config_list_field: section name " << config_file_section << " has no key: " << config_key;
+      debug_print(ss.str());
+    
+      return false;
+    }
+
+    
     std::map< std::string, std::string > submap;
     try{
       submap = _data[config_file_section];
