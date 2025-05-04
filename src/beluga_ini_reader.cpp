@@ -74,10 +74,13 @@ namespace beluga_utils
     {
       if(! _initialised)
       {
+        Serial.println("ini_reader.print_config_to_serial: Cannot print, not initialised!");
         return;
       }
+      Serial.println("Printing config...");
       for(auto iter1 = _data.begin(); iter1 != _data.end(); iter1++)
       {
+
         Serial.println(iter1->first.c_str());
         for(auto iter2 = iter1->second.begin(); iter2 != iter1->second.end(); iter2++)
         {
@@ -102,9 +105,7 @@ namespace beluga_utils
   @todo: Replace SPIFFS with LittleFS and have better failure handling e.g. file not found.
   */
   bool ini_reader::initialise(bool crash_on_fail )
-  {
-    Serial.println("------Initialising ini reader------");
-    
+  {   
     //_line_buffer_len is the max length of any one line (not the whole file)
     char buffer[_line_buffer_len];
     const char *this_filename = _config_file_path.c_str(); 
@@ -155,9 +156,12 @@ namespace beluga_utils
         bool new_section_ok = add_new_section_name(this_heading);
         if(! new_section_ok)
         {
+          //Due to device inheritance, we may initialsie one section multiple times. That's ok; just continue
           std::stringstream ss;
-          ss << "Error adding config section " << this_heading << ": duplicate section name.";
-          return initialise_return_failure(ss.str(), crash_on_fail);
+          ss << "Not adding adding config section " << this_heading << ": duplicate section name.";
+          //return initialise_return_failure(ss.str(), crash_on_fail);
+          Serial.println(ss.str().c_str());
+          continue;
         }
 
         this_section_name = this_heading;
@@ -214,11 +218,24 @@ namespace beluga_utils
   {
     try
     {
+      bool config_key_present = _data[section_name].find(key_name) != _data[section_name].end();
+      if(!config_key_present)
+      {
+        if(verbose)
+        {
+          std::stringstream ss;
+          ss << "ini_reader::get_config_value: section name " << section_name << " has no key: " << key_name;
+          debug_print(ss.str());
+        }
+        return false;
+      }
+
+
       std::string this_value = _data[section_name][key_name];
       if(verbose)
       {
         std::stringstream ss;
-        ss << "ini_reader::get_config_value: section name " << section_name << " has value: " << this_value;
+        ss << "ini_reader::get_config_value: section name " << section_name << " key name " << key_name << " has value: " << this_value;
         debug_print(ss.str());
       }
       *return_config_value = this_value;
@@ -226,6 +243,7 @@ namespace beluga_utils
     }catch(...)
     {
       //Section-key pair not present.
+      //This should never trigger.
     }
     return false;
   }
