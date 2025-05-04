@@ -30,9 +30,19 @@ namespace beluga_utils
 
       if(std::find(_section_names.begin(), _section_names.end(), this_section_name) != _section_names.end()) {
           /* v contains x */
+          Serial.print("Section name ");
+          Serial.print(this_section_name.c_str());
+          Serial.println(" already present in list. Cannot duplicate section names! Section name list: ");
+          for(auto iter = _section_names.begin(); iter != _section_names.end(); iter++)
+          {
+            Serial.println(iter->c_str());
+          }
+          Serial.println("----end section name list----");
           return false;
       } else {
           /* v does not contain x */
+          Serial.print("Adding config section name ");
+          Serial.println(this_section_name.c_str());
           _section_names.push_back(this_section_name);
           std::map<std::string, std::string> this_map;
           _data[this_section_name] = this_map;
@@ -93,7 +103,7 @@ namespace beluga_utils
   */
   bool ini_reader::initialise(bool crash_on_fail )
   {
-
+    Serial.println("------Initialising ini reader------");
     
     //_line_buffer_len is the max length of any one line (not the whole file)
     char buffer[_line_buffer_len];
@@ -119,23 +129,29 @@ namespace beluga_utils
       char terminator_char = '\n';
       char comment_char = ';';
 
-      int l = this_file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
-      if(l == 0)
+      int n_bytes_read = this_file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
+      
+      if(n_bytes_read == 0)
       {
         //Just a newline (terminator isn't returned)
         continue;
       }
+      if(n_bytes_read <= 2)
+      {
+        //Minimum length is 3 e.g. x=1 or [x]
+        continue;
+      }
       //TODO: Last line of file?
       
-      bool is_section_heading = (buffer[0] == '[') && (buffer[l-1] == ']');
+      bool is_section_heading = (buffer[0] == '[') && (buffer[n_bytes_read-1] == ']');
       if(is_section_heading)
       {
-        std::string this_heading = std::string(buffer, l); //std::string(buffer[1], l-2); //Copy a fixed number of chars. If there are \0 within the string, problems!
+        std::string this_heading = std::string(buffer, n_bytes_read); //Copy a fixed number of chars. If there are \0 within the string, problems!
         //Remove [ and ]
         this_heading = this_heading.substr(1, this_heading.size()-2);
         
-        debug_print("Read config heading: ", true, false);
-        debug_print(this_heading);
+        //debug_print("Read config heading: ", true, false);
+        //debug_print(this_heading);
         bool new_section_ok = add_new_section_name(this_heading);
         if(! new_section_ok)
         {
@@ -148,13 +164,13 @@ namespace beluga_utils
         continue; //Get the config
 
       }else{
-        std::string this_line = std::string(buffer, l); //Copy a fixed number of chars. If there are \0 within the string, problems!
+        std::string this_line = std::string(buffer, n_bytes_read); //Copy a fixed number of chars. If there are \0 within the string, problems!
         if(this_line[0] == comment_char)
         {
           continue; //Ignore comment
         }
-        debug_print("Read config line: ", true, false);
-        debug_print(this_line);
+        //debug_print("Read config line: ", true, false);
+        //debug_print(this_line);
         add_new_config_data(this_section_name, this_line);
       }
     }
@@ -219,7 +235,39 @@ namespace beluga_utils
     _data.clear();
   }
   
-
+  /*!
+  Some fields are a list of names (of devices or comms channels or whatever)
+  parse_names_config retrieves the list and splits it into a vector
+  If not initialised, return false
+  if the config_file_section is not found, return false
+  If the config_key is not found, return true (it means an empty list, which is valid)
+  */
+ bool ini_reader::get_config_list_field(std::string config_file_section, std::string config_key, std::vector<std::string> & results_vec, std::string delim)
+ {
+    if(! _initialised)
+    {
+      return false;
+    }
+    std::map< std::string, std::string > submap;
+    try{
+      submap = _data[config_file_section];
+    }
+    catch(...)
+    {
+      //Assume config_file_section not found
+      return false;
+    }
+    try{
+      std::string list_of_names_str;
+      list_of_names_str = submap[config_key];
+      results_vec = beluga_utils::split_string(list_of_names_str, delim);
+    }
+    catch(...)
+    {
+      //Assume config_key not found. Leave vector empty.
+    }
+    return true;
+ }
 
 
 

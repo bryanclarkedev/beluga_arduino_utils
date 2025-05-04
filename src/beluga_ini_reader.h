@@ -39,6 +39,11 @@ namespace beluga_utils
     std::string return_str;
     bool got_config_ok = this_ini.get_config_name(section_name, key_str, &return_str);
     \todo Implement additional get_config_value functions with different return types and perform the type conversion in here.
+
+    NOTE: ALL data from the .ini is loaded into the _data dictionary-of-dictionaries. If your .ini is huge you'll eat all the memory.debug_print
+    Call clear() once you are done reading from the .ini.
+    NOTE: ALL data from the .ini is read as STRINGS. It is assumed that you know what type to convert them to, if necessary. If you
+    really care about automated typing, there are JSON libraries that will do what you need.
     */
     class ini_reader
     {
@@ -46,7 +51,7 @@ namespace beluga_utils
             ini_reader(std::string);
             bool initialise(bool crash_on_fail = true );
             bool get_config_value(std::string section_name, std::string key_name, std::string * return_config_value, bool verbose = true);
-            //bool parse_names_config(std::string config_file_section, std::string config_key, std::vector<std::string> & results_vec, std::string delim=",");
+            bool get_config_list_field(std::string config_file_section, std::string config_key, std::vector<std::string> & results_vec, std::string delim=",");
             void print_config_to_serial();
             void clear();
         protected:
