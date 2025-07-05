@@ -96,7 +96,7 @@ namespace beluga_utils
   /*!
   \brief Initialises the ini_reader
   \details Use SPIFFS to open the file, validate that it complies with the .ini format.
-  @param crash_on_fail set to True if you want it to error_loop_forever if something goes wrong on launching SPIFFS, set to False (default) and it will return False if something goes wrong.
+  @param crash_on_fail set to True if you want it to debug_print_loop_forever if something goes wrong on launching SPIFFS, set to False (default) and it will return False if something goes wrong.
   \return True if the file is found, and is valid .ini. False otherwise if debug_print_loop_forever is False, or hang of debug_print_loop_forever is True
   Usage:
   ini_reader ini("./config.ini");
