@@ -4,6 +4,7 @@
 #include "beluga_string.h"
 #include <vector>
 #include "beluga_debug.h"
+#include "beluga_constants.h"
 namespace beluga_utils
 {
     /*!
@@ -54,10 +55,12 @@ namespace beluga_utils
             bool get_config_list_field(std::string config_file_section, std::string config_key, std::vector<std::string> & results_vec, std::string delim=",");
             void print_config_to_serial();
             void clear();
+            bool is_initialised(){return _initialised;}
+            std::string _config_file_path; //Public for debugging, TODO: move to protected
+
         protected:
           bool initialise_return_failure(std::string error_message, bool crash_on_fail);
-          std::string _config_file_path;
-          const size_t _line_buffer_len = 255;
+          const size_t _line_buffer_len = beluga_utils::ini_reader_max_line_size;
           bool _file_found = false;
           bool _file_valid = false;
           bool _initialised = false;

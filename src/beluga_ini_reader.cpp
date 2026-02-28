@@ -6,7 +6,6 @@
 
 #include "beluga_string.h"
 
-
 namespace beluga_utils
 {
   /*!
@@ -106,10 +105,14 @@ namespace beluga_utils
   */
   bool ini_reader::initialise(bool crash_on_fail )
   {   
+    Serial.println("INI READER INITIALISING");
     //_line_buffer_len is the max length of any one line (not the whole file)
     char buffer[_line_buffer_len];
     const char *this_filename = _config_file_path.c_str(); 
     
+
+    Serial.print("Config file path: ");
+    Serial.println(this_filename);
     //Start SPIFFS
     bool spiffs_ok = SPIFFS.begin();
     if(!spiffs_ok)
@@ -131,7 +134,7 @@ namespace beluga_utils
       char comment_char = ';';
 
       int n_bytes_read = this_file.readBytesUntil(terminator_char, buffer, sizeof(buffer)); //Terminator character is not returned
-      
+
       if(n_bytes_read == 0)
       {
         //Just a newline (terminator isn't returned)
@@ -143,11 +146,14 @@ namespace beluga_utils
         continue;
       }
       //TODO: Last line of file?
-      
-      bool is_section_heading = (buffer[0] == '[') && (buffer[n_bytes_read-1] == ']');
+      std::string this_line = std::string(buffer, n_bytes_read);
+      trim(this_line);
+      //this_line = beluga_utils::trim_copy(this_line);
+      bool is_section_heading = (this_line[0] == '[') && (this_line.back() == ']');
       if(is_section_heading)
       {
         std::string this_heading = std::string(buffer, n_bytes_read); //Copy a fixed number of chars. If there are \0 within the string, problems!
+
         //Remove [ and ]
         this_heading = this_heading.substr(1, this_heading.size()-2);
         
@@ -169,6 +175,7 @@ namespace beluga_utils
 
       }else{
         std::string this_line = std::string(buffer, n_bytes_read); //Copy a fixed number of chars. If there are \0 within the string, problems!
+
         if(this_line[0] == comment_char)
         {
           continue; //Ignore comment
@@ -178,8 +185,10 @@ namespace beluga_utils
         add_new_config_data(this_section_name, this_line);
       }
     }
-    
     _initialised = true;
+
+        Serial.println("INI READER DONE INITIALISING");
+
     return _initialised;
 
   }
@@ -187,8 +196,17 @@ namespace beluga_utils
   bool ini_reader::add_new_config_data(std::string this_section_name, std::string this_data_str)
   {
     std::string this_delimiter = "=";
+    try
+    {
     std::vector<std::string> split_data = beluga_utils::split_string(this_data_str, this_delimiter);
     _data[this_section_name][split_data[0]] = split_data[1];
+    }
+    catch(const std::exception& e)
+    {
+      //std::cerr << e.what() << '\n';
+      return false;
+    }
+
 
     return true;
   }
